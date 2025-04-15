@@ -380,7 +380,6 @@ const NotesBoard: React.FC = () => {
             const newNotes = { ...prevNotes };
             const processedNotes = new Set<string>();
             const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
             const MARGIN = 50;
             const MIN_NODE_SPACING = 300;
             const LEVEL_HEIGHT = 200;
@@ -413,7 +412,7 @@ const NotesBoard: React.FC = () => {
             const nodeSpacing = totalWidth / (maxWidth + 1);
 
             // Layout a single node and its children
-            const layoutNode = (noteId: string, level: number, index: number, totalAtLevel: number) => {
+            const layoutNode = (noteId: string, level: number, index: number) => {
                 if (processedNotes.has(noteId)) return;
                 processedNotes.add(noteId);
 
@@ -433,9 +432,8 @@ const NotesBoard: React.FC = () => {
 
                 // Layout children if not collapsed
                 if (!note.collapsed) {
-                    const childCount = note.children.length;
                     note.children.forEach((childId, childIndex) => {
-                        layoutNode(childId, level + 1, childIndex, childCount);
+                        layoutNode(childId, level + 1, childIndex);
                     });
                 }
             };
@@ -447,7 +445,7 @@ const NotesBoard: React.FC = () => {
 
             // Layout each root note and its hierarchy
             rootNotes.forEach((root, index) => {
-                layoutNode(root.id, 0, index, rootNotes.length);
+                layoutNode(root.id, 0, index,);
             });
 
             return newNotes;
@@ -478,7 +476,6 @@ const NotesBoard: React.FC = () => {
                     title={note.title}
                     content={note.content}
                     position={note.position}
-                    onPositionChange={handlePositionChange}
                     collapsed={note.collapsed}
                     onCollapseToggle={() => handleCollapseToggle(note.id)}
                     hasChildren={note.children.length > 0}
